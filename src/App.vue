@@ -98,24 +98,41 @@
         </div>
       </div>
 
+      <!-- Divider -->
+      <div class="divider"></div>
+
       <!-- Auth section -->
-      <div v-if="!beverageStore.user">
-        <button @click="withGoogle" style="display: inline-flex; align-items: center; gap: 8px;">
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" />
+      <div class="auth-section" v-if="!beverageStore.user">
+        <button class="btn btn-google" @click="withGoogle">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="16" height="16" />
           Sign in with Google
         </button>
       </div>
-      <div v-else style="display: flex; align-items: center; gap: 8px;">
-        <p>Signed in as {{ beverageStore.user.displayName || beverageStore.user.email }}</p>
-        <button @click="signOutUser">Sign out</button>
+      <div class="auth-section auth-signed-in" v-else>
+        <span class="user-info">Signed in as <strong>{{ beverageStore.user.displayName || beverageStore.user.email }}</strong></span>
+        <button class="btn btn-link" @click="signOutUser">Sign out</button>
       </div>
 
-      <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-        <input type="text" placeholder="Beverage Name" v-model="beverageStore.currentName" />
-        <button @click="handleMakeBeverage" :disabled="!beverageStore.user">&#127861; Make Beverage</button>
+      <!-- Make beverage -->
+      <div class="make-section">
+        <input
+          class="name-input"
+          type="text"
+          placeholder="Name your beverage..."
+          v-model="beverageStore.currentName"
+        />
+        <button
+          class="btn btn-primary"
+          @click="handleMakeBeverage"
+          :disabled="!beverageStore.user"
+        >
+          Make Beverage
+        </button>
       </div>
-      <p v-if="!beverageStore.user && !message">Please sign in to save your beverage.</p>
-      <p v-if="message" :class="isError ? 'error' : 'success'">{{ message }}</p>
+
+      <!-- Status message -->
+      <p v-if="!beverageStore.user && !message" class="status-hint">Please sign in to save your beverage.</p>
+      <p v-if="message" class="status-msg" :class="isError ? 'status-error' : 'status-success'">{{ message }}</p>
 
       <!-- Saved beverages list -->
       <div id="beverage-container" v-if="beverageStore.user">
@@ -305,14 +322,142 @@ body, html {
 ul {
   list-style: none;
 }
-.error {
-  color: #f32525da;
-  font-size: 0.9em;
-  margin: 0.25em 0;
+.divider {
+  height: 1px;
+  background: #e5e5ea;
+  margin: 20px 0;
 }
-.success {
-  color: #25f325da;
-  font-size: 0.9em;
-  margin: 0.25em 0;
+
+.auth-section {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.auth-signed-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.user-info {
+  font-size: 13px;
+  color: #6e6e73;
+
+  strong {
+    color: #1d1d1f;
+  }
+}
+
+.btn {
+  font-family: inherit;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: #fff;
+  color: #1d1d1f;
+  border: 1.5px solid #e5e5ea;
+  font-size: 14px;
+
+  &:hover {
+    background: #f5f5f7;
+    border-color: #d2d2d7;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.btn-link {
+  background: none;
+  color: #0071e3;
+  padding: 4px 0;
+  font-size: 13px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.btn-primary {
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: #1d1d1f;
+  color: #fff;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #333336;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #d2d2d7;
+    color: #fff;
+    cursor: not-allowed;
+  }
+}
+
+.make-section {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.name-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid #e5e5ea;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  background: #fff;
+
+  &::placeholder {
+    color: #aeaeb2;
+  }
+
+  &:focus {
+    border-color: #0071e3;
+    box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.12);
+  }
+}
+
+.status-hint {
+  text-align: center;
+  font-size: 13px;
+  color: #86868b;
+  margin-top: 12px;
+}
+
+.status-msg {
+  font-size: 13px;
+  margin-top: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.status-error {
+  color: #ff3b30;
+}
+
+.status-success {
+  color: #34c759;
 }
 </style>
