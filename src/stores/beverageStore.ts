@@ -118,14 +118,15 @@ export const useBeverageStore = defineStore("BeverageStore", {
         userId: this.user.uid,
       });
 
-      // Update local state immediately
-      this.beverages.push(beverage);
-      this.currentBeverage = beverage;
-
       const name = beverage.name;
       return `Beverage ${name} made successfully!`;
     },
 
-    showBeverage() {},
+    showBeverage(beverage: BeverageType) {
+      this.currentTemp = beverage.temp;
+      this.currentBase = beverage.base;
+      this.currentCreamer = beverage.creamer;
+      this.currentSyrup = beverage.syrup;
+    },
   },
 });

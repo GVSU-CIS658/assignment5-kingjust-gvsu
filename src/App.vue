@@ -2,17 +2,6 @@
   <div>
     <Beverage :isIced="beverageStore.currentTemp === 'Cold'" />
 
-    <!-- Auth section -->
-    <div style="margin-top: 20px; text-align: center;" v-if="!beverageStore.user">
-      <button @click="withGoogle" style="display: inline-flex; align-items: center; gap: 8px;">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" />
-        Sign in with Google
-      </button>
-    </div>
-    <div style="margin-top: 20px; text-align: center;" v-else>
-      <p>{{ beverageStore.user.displayName || beverageStore.user.email }}</p>
-      <button @click="signOutUser">Sign out</button>
-    </div>
     <ul>
       <li>
         <template v-for="temp in beverageStore.temps" :key="temp">
@@ -28,70 +17,84 @@
           </label>
         </template>
       </li>
-    </ul>
-    <ul>
       <li>
-        <template v-for="b in beverageStore.bases" :key="b.id">
+        <template v-for="base in beverageStore.bases" :key="base.id">
           <label>
             <input
               type="radio"
-              name="bases"
-              :id="`r${b.id}`"
-              :value="b"
+              name="base"
+              :id="`r${base.id}`"
+              :value="base"
               v-model="beverageStore.currentBase"
             />
-            {{ b.name }}
+            {{ base.name }}
           </label>
         </template>
       </li>
-    </ul>
-    <ul>
       <li>
-        <template v-for="s in beverageStore.syrups" :key="s.id">
+        <template v-for="creamer in beverageStore.creamers" :key="creamer.id">
           <label>
             <input
               type="radio"
-              name="syrups"
-              :id="`r${s.id}`"
-              :value="s"
-              v-model="beverageStore.currentSyrup"
-            />
-            {{ s.name }}
-          </label>
-        </template>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <template v-for="c in beverageStore.creamers" :key="c.id">
-          <label>
-            <input
-              type="radio"
-              name="creamers"
-              :id="`r${c.id}`"
-              :value="c"
+              name="creamer"
+              :id="`r${creamer.id}`"
+              :value="creamer"
               v-model="beverageStore.currentCreamer"
             />
-            {{ c.name }}
+            {{ creamer.name }}
+          </label>
+        </template>
+      </li>
+      <li>
+        <template v-for="syrup in beverageStore.syrups" :key="syrup.id">
+          <label>
+            <input
+              type="radio"
+              name="syrup"
+              :id="`r${syrup.id}`"
+              :value="syrup"
+              v-model="beverageStore.currentSyrup"
+            />
+            {{ syrup.name }}
           </label>
         </template>
       </li>
     </ul>
-    <input type="text" placeholder="Beverage Name" v-model="beverageStore.currentName" />
-    <button @click="handleMakeBeverage" :disabled="!beverageStore.user">🍺 Make Beverage</button>
-    <p v-if="message">{{ message }}</p>
 
-    <!-- Display user's beverages -->
-    <div v-if="beverageStore.user && beverageStore.beverages.length > 0">
-      <h3>Your Beverages</h3>
-      <ul>
-        <li v-for="bev in beverageStore.beverages" :key="bev.id">
-          {{ bev.name }} - {{ bev.temp }} | {{ bev.base.name }} | {{ bev.syrup.name }} | {{ bev.creamer.name }}
-        </li>
-      </ul>
+    <!-- Auth section -->
+    <div v-if="!beverageStore.user">
+      <button @click="withGoogle" style="display: inline-flex; align-items: center; gap: 8px;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18" />
+        Sign in with Google
+      </button>
+    </div>
+    <div v-else style="display: flex; align-items: center; gap: 8px;">
+      <p>Signed in as {{ beverageStore.user.displayName || beverageStore.user.email }}</p>
+      <button @click="signOutUser">Sign out</button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+      <input type="text" placeholder="Beverage Name" v-model="beverageStore.currentName" />
+      <button @click="handleMakeBeverage" :disabled="!beverageStore.user">&#127861; Make Beverage</button>
+    </div>
+    <p v-if="!beverageStore.user && !message">Please sign in to save your beverage.</p>
+    <p v-if="message" :class="isError ? 'error' : 'success'">{{ message }}</p>
+
+    <!-- Saved beverages list -->
+    <div id="beverage-container" v-if="beverageStore.user">
+      <template v-for="beverage in beverageStore.beverages" :key="beverage.id">
+        <label>
+          <input
+            type="radio"
+            name="savedBeverage"
+            :value="beverage"
+            @change="beverageStore.showBeverage(beverage)"
+          />
+          {{ beverage.name }}
+        </label>
+      </template>
     </div>
   </div>
-  <div id="beverage-container" style="margin-top: 20px"></div>
 </template>
 
 <script setup lang="ts">
@@ -103,6 +106,7 @@ import { useBeverageStore } from "./stores/beverageStore";
 
 const beverageStore = useBeverageStore();
 const message = ref("");
+const isError = ref(false);
 
 // Listen for auth state changes and update store
 onAuthStateChanged(auth, (user) => {
@@ -115,6 +119,7 @@ async function withGoogle() {
     await signInWithPopup(auth, provider);
   } catch (error: any) {
     message.value = error.message || "Sign in failed.";
+    isError.value = true;
   }
 }
 
@@ -124,7 +129,9 @@ async function signOutUser() {
 }
 
 async function handleMakeBeverage() {
-  message.value = await beverageStore.makeBeverage();
+  const result = await beverageStore.makeBeverage();
+  message.value = result;
+  isError.value = !result.includes("successfully");
 }
 </script>
 
@@ -141,5 +148,15 @@ html {
 }
 ul {
   list-style: none;
+}
+.error {
+  color: #f32525da;
+  font-size: 0.9em;
+  margin: 0.25em 0;
+}
+.success {
+  color: #25f325da;
+  font-size: 0.9em;
+  margin: 0.25em 0;
 }
 </style>
