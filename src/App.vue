@@ -13,64 +13,90 @@
 
     <!-- Main card -->
     <div class="card">
-      <ul>
-        <li>
-          <template v-for="temp in beverageStore.temps" :key="temp">
-            <label>
+      <div class="options">
+        <div class="option-group">
+          <h3>Temperature</h3>
+          <div class="pill-group">
+            <label
+              v-for="temp in beverageStore.temps"
+              :key="temp"
+              class="pill"
+              :class="{ active: beverageStore.currentTemp === temp }"
+            >
               <input
                 type="radio"
                 name="temperature"
-                :id="`r${temp}`"
                 :value="temp"
                 v-model="beverageStore.currentTemp"
               />
               {{ temp }}
             </label>
-          </template>
-        </li>
-        <li>
-          <template v-for="base in beverageStore.bases" :key="base.id">
-            <label>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <h3>Base</h3>
+          <div class="pill-group">
+            <label
+              v-for="base in beverageStore.bases"
+              :key="base.id"
+              class="pill"
+              :class="{ active: beverageStore.currentBase?.id === base.id }"
+            >
               <input
                 type="radio"
                 name="base"
-                :id="`r${base.id}`"
                 :value="base"
                 v-model="beverageStore.currentBase"
               />
+              <span class="color-dot" :style="{ backgroundColor: base.color }"></span>
               {{ base.name }}
             </label>
-          </template>
-        </li>
-        <li>
-          <template v-for="creamer in beverageStore.creamers" :key="creamer.id">
-            <label>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <h3>Creamer</h3>
+          <div class="pill-group">
+            <label
+              v-for="creamer in beverageStore.creamers"
+              :key="creamer.id"
+              class="pill"
+              :class="{ active: beverageStore.currentCreamer?.id === creamer.id }"
+            >
               <input
                 type="radio"
                 name="creamer"
-                :id="`r${creamer.id}`"
                 :value="creamer"
                 v-model="beverageStore.currentCreamer"
               />
+              <span class="color-dot" :style="{ backgroundColor: creamer.color === 'transparent' ? '#e0e0e0' : creamer.color }"></span>
               {{ creamer.name }}
             </label>
-          </template>
-        </li>
-        <li>
-          <template v-for="syrup in beverageStore.syrups" :key="syrup.id">
-            <label>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <h3>Syrup</h3>
+          <div class="pill-group">
+            <label
+              v-for="syrup in beverageStore.syrups"
+              :key="syrup.id"
+              class="pill"
+              :class="{ active: beverageStore.currentSyrup?.id === syrup.id }"
+            >
               <input
                 type="radio"
                 name="syrup"
-                :id="`r${syrup.id}`"
                 :value="syrup"
                 v-model="beverageStore.currentSyrup"
               />
+              <span class="color-dot" :style="{ backgroundColor: syrup.color === 'transparent' ? '#e0e0e0' : syrup.color }"></span>
               {{ syrup.name }}
             </label>
-          </template>
-        </li>
-      </ul>
+          </div>
+        </div>
+      </div>
 
       <!-- Auth section -->
       <div v-if="!beverageStore.user">
@@ -209,6 +235,71 @@ body, html {
   margin-bottom: 16px;
   position: relative;
   overflow: visible;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option-group {
+  h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #86868b;
+    margin-bottom: 8px;
+  }
+}
+
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: 1.5px solid transparent;
+  user-select: none;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  &:hover {
+    background: #e8e8ed;
+  }
+
+  &.active {
+    background: #1d1d1f;
+    color: #fff;
+    border-color: #1d1d1f;
+
+    .color-dot {
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+.color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 ul {
