@@ -134,19 +134,28 @@
       <p v-if="!beverageStore.user && !message" class="status-hint">Please sign in to save your beverage.</p>
       <p v-if="message" class="status-msg" :class="isError ? 'status-error' : 'status-success'">{{ message }}</p>
 
-      <!-- Saved beverages list -->
-      <div id="beverage-container" v-if="beverageStore.user">
-        <template v-for="beverage in beverageStore.beverages" :key="beverage.id">
-          <label>
-            <input
-              type="radio"
-              name="savedBeverage"
-              :value="beverage"
-              @change="beverageStore.showBeverage(beverage)"
-            />
-            {{ beverage.name }}
-          </label>
-        </template>
+    </div>
+
+    <!-- Saved beverages -->
+    <div class="card saved-card" v-if="beverageStore.user && beverageStore.beverages.length > 0">
+      <h3>Your Beverages</h3>
+      <div class="saved-list">
+        <label
+          v-for="beverage in beverageStore.beverages"
+          :key="beverage.id"
+          class="saved-item"
+        >
+          <input
+            type="radio"
+            name="savedBeverage"
+            :value="beverage"
+            @change="beverageStore.showBeverage(beverage)"
+          />
+          <div class="saved-item-content">
+            <span class="saved-name">{{ beverage.name }}</span>
+            <span class="saved-detail">{{ beverage.temp }} &middot; {{ beverage.base.name }} &middot; {{ beverage.creamer.name }} &middot; {{ beverage.syrup.name }}</span>
+          </div>
+        </label>
       </div>
     </div>
   </div>
@@ -459,5 +468,59 @@ ul {
 
 .status-success {
   color: #34c759;
+}
+
+.saved-card {
+  margin-top: 16px;
+
+  h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #86868b;
+    margin-bottom: 12px;
+  }
+}
+
+.saved-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  &:hover {
+    background: #f5f5f7;
+  }
+}
+
+.saved-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.saved-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.saved-detail {
+  font-size: 12px;
+  color: #86868b;
 }
 </style>
