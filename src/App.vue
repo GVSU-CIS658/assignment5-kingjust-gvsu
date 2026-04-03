@@ -65,16 +65,23 @@
         </template>
       </li>
     </ul>
-    <input type="text" placeholder="Beverage Name" />
-    <button>🍺 Make Beverage</button>
+    <input type="text" placeholder="Beverage Name" v-model="beverageStore.currentName" />
+    <button @click="handleMakeBeverage">🍺 Make Beverage</button>
+    <p v-if="message">{{ message }}</p>
   </div>
   <div id="beverage-container" style="margin-top: 20px"></div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import Beverage from "./components/Beverage.vue";
 import { useBeverageStore } from "./stores/beverageStore";
 const beverageStore = useBeverageStore();
+const message = ref("");
+
+async function handleMakeBeverage() {
+  message.value = await beverageStore.makeBeverage();
+}
 </script>
 
 <style lang="scss">
