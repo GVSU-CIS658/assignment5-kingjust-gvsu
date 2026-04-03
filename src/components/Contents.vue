@@ -8,11 +8,12 @@
 
 <style scoped>
 .carafe {
-  /*   // position: absolute; */
-  min-height: 96px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   overflow: hidden;
   border-radius: 0.05em 0.05em 2.2em 2.2em;
-  background: #fff;
+  background: transparent;
   width: 100%;
   height: 100%;
 }
