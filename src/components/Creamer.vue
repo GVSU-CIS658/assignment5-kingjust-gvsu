@@ -1,10 +1,8 @@
 <template>
-  <div class="froth">
-    <div
-      v-for=" in 5"
-      class="foam"
-      :style="{ backgroundColor: beverageStore.currentCreamer?.color }"
-    ></div>
+  <div
+    class="froth"
+    :style="{ '--creamer-color': beverageStore.currentCreamer?.color }"
+  >
   </div>
 </template>
 
@@ -15,51 +13,47 @@ const beverageStore = useBeverageStore();
 </script>
 <style lang="scss" scoped>
 .froth {
-  overflow: visible;
   transform: translateY(400%);
   position: relative;
   height: 20%;
   width: 100%;
-  background-color: #c6c6c6;
   animation: pour-tea 2s 2s forwards;
-}
-.foam {
-  display: block;
-  background: #e4e0d2;
-  border-radius: 30px;
-  height: 40px;
-  width: 40px;
-  position: absolute;
-}
+  z-index: 4;
+  background: linear-gradient(
+    180deg,
+    var(--creamer-color) 0%,
+    color-mix(in srgb, var(--creamer-color) 85%, #a08060) 100%
+  );
 
-.foam:nth-child(1) {
-  top: 0px;
-  left: -3px;
-}
+  /* Soft foam top edge */
+  &:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: -2px;
+    right: -2px;
+    height: 14px;
+    background: var(--creamer-color);
+    border-radius: 50% 50% 40% 40%;
+    filter: blur(2px);
+    opacity: 0.7;
+  }
 
-.foam:nth-child(2) {
-  top: 0px;
-  left: 55px;
-}
-
-.foam:nth-child(3) {
-  width: 30px;
-  height: 30px;
-  border-radius: 40px;
-  top: 3px;
-  left: 30px;
-}
-
-.foam:nth-child(4) {
-  width: 30px;
-  height: 30px;
-  border-radius: 45px;
-  top: 5px;
-  right: -2px;
-}
-
-.foam:nth-child(5) {
-  top: 2px;
-  right: 10px;
+  /* Light reflection on foam surface */
+  &:after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 15%;
+    width: 35%;
+    height: 40%;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    border-radius: 50%;
+    filter: blur(2px);
+  }
 }
 </style>

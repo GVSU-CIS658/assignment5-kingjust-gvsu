@@ -18,12 +18,23 @@ const beverageStore = useBeverageStore();
   height: 20%;
   animation: pour-tea 2s 1s forwards;
   z-index: 2;
-  background: repeating-linear-gradient(
-    45deg,
-    var(--texture-color),
-    var(--texture-color) 10px,
-    rgba(225, 207, 149, 1) 10px,
-    rgba(225, 207, 149, 1) 20px
+  background: linear-gradient(
+    180deg,
+    var(--texture-color) 0%,
+    color-mix(in srgb, var(--texture-color) 70%, #000) 100%
   );
+  opacity: 0.85;
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+  }
 }
 </style>

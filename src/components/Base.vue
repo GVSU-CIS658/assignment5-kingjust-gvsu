@@ -1,7 +1,7 @@
 <template>
   <div
     class="baseBeverage"
-    :style="{ backgroundColor: beverageStore.currentBase?.color }"
+    :style="{ '--base-color': beverageStore.currentBase?.color }"
   ></div>
 </template>
 
@@ -19,6 +19,23 @@ const beverageStore = useBeverageStore();
   bottom: 0;
   animation: pour-tea 2s;
   z-index: 300;
-  /* // border-radius: 0.05em 0.05em 2.2em 2.2em; */
+  background: linear-gradient(
+    180deg,
+    var(--base-color) 0%,
+    color-mix(in srgb, var(--base-color) 75%, #000) 100%
+  );
+}
+
+.baseBeverage:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    170deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  pointer-events: none;
 }
 </style>
