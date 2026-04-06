@@ -101,6 +101,13 @@ export const useBeverageStore = defineStore("BeverageStore", {
         return "Please complete all beverage options and the name before making a beverage.";
       }
 
+      const nameExists = this.beverages.some(
+        (b) => b.name.toLowerCase() === this.currentName.trim().toLowerCase()
+      );
+      if (nameExists) {
+        return "A beverage with that name already exists. Please choose a different name.";
+      }
+
       const id = `${this.user.uid}_${Date.now()}`;
 
       const beverage: BeverageType = {
