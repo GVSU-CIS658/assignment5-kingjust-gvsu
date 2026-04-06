@@ -6,13 +6,16 @@
       <p class="subtitle">Craft your perfect beverage</p>
     </header>
 
-    <!-- Mug preview (outside card for transparent background) -->
+    <!-- Mug preview -->
     <div class="mug-preview">
       <Beverage :isIced="beverageStore.currentTemp === 'Cold'" />
     </div>
 
+    <!-- Content layout -->
+    <div class="content-layout">
+
     <!-- Main card -->
-    <div class="card">
+    <div class="card main-card">
       <div class="options">
         <div class="option-group">
           <h3>Temperature</h3>
@@ -158,6 +161,8 @@
         </label>
       </div>
     </div>
+
+    </div><!-- end content-layout -->
   </div>
 </template>
 
@@ -221,7 +226,7 @@ body, html {
 
 .app-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 860px;
 }
 
 .app-header {
@@ -470,8 +475,21 @@ ul {
   color: #34c759;
 }
 
+.content-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.main-card {
+  flex: 1;
+  min-width: 0;
+}
+
 .saved-card {
-  margin-top: 16px;
+  width: 280px;
+  flex-shrink: 0;
+  margin-top: 0;
 
   h3 {
     font-size: 12px;
@@ -480,6 +498,17 @@ ul {
     letter-spacing: 0.8px;
     color: #86868b;
     margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 700px) {
+  .content-layout {
+    flex-direction: column;
+  }
+
+  .main-card,
+  .saved-card {
+    width: 100%;
   }
 }
 
