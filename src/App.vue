@@ -56,27 +56,6 @@
         </div>
 
         <div class="option-group">
-          <h3>Creamer</h3>
-          <div class="pill-group">
-            <label
-              v-for="creamer in beverageStore.creamers"
-              :key="creamer.id"
-              class="pill"
-              :class="{ active: beverageStore.currentCreamer?.id === creamer.id }"
-            >
-              <input
-                type="radio"
-                name="creamer"
-                :value="creamer"
-                v-model="beverageStore.currentCreamer"
-              />
-              <span class="color-dot" :style="{ backgroundColor: creamer.color === 'transparent' ? '#e0e0e0' : creamer.color }"></span>
-              {{ creamer.name }}
-            </label>
-          </div>
-        </div>
-
-        <div class="option-group">
           <h3>Syrup</h3>
           <div class="pill-group">
             <label
@@ -93,6 +72,27 @@
               />
               <span class="color-dot" :style="{ backgroundColor: syrup.color === 'transparent' ? '#e0e0e0' : syrup.color }"></span>
               {{ syrup.name }}
+            </label>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <h3>Creamer</h3>
+          <div class="pill-group">
+            <label
+              v-for="creamer in beverageStore.creamers"
+              :key="creamer.id"
+              class="pill"
+              :class="{ active: beverageStore.currentCreamer?.id === creamer.id }"
+            >
+              <input
+                type="radio"
+                name="creamer"
+                :value="creamer"
+                v-model="beverageStore.currentCreamer"
+              />
+              <span class="color-dot" :style="{ backgroundColor: creamer.color === 'transparent' ? '#e0e0e0' : creamer.color }"></span>
+              {{ creamer.name }}
             </label>
           </div>
         </div>
